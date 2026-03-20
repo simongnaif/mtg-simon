@@ -76,7 +76,7 @@
 
         .life-controls {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 3px;
             margin-bottom: 10px;
             padding: 0 4px;
@@ -487,6 +487,8 @@
     </div>
 
     <script>
+        const defaultNames = ["TATO", "CARLOS", "SIMÓN", "FRANCIS", "JESÚS", "SANTI"];
+
         let players = [
             { name: "TATO", life: 40, cmd: {}, commanderDeaths: 0, poison: 0, monarca: false },
             { name: "CARLOS", life: 40, cmd: {}, commanderDeaths: 0, poison: 0, monarca: false },
@@ -501,6 +503,16 @@
 
         function updateUI() {
             const area = document.getElementById('player-area');
+
+            if (players.length === 1) {
+                area.style.gridTemplateColumns = "1fr";
+            } else if (players.length === 2) {
+                area.style.gridTemplateColumns = "repeat(2, 1fr)";
+            } else if (players.length === 3) {
+                area.style.gridTemplateColumns = "repeat(3, 1fr)";
+            } else {
+                area.style.gridTemplateColumns = "repeat(2, 1fr)";
+            }
 
             area.innerHTML = players.map((p, i) => `
         <div class="player-card ${p.life <= 10 ? 'peligro' : ''} ${p.monarca ? 'monarca-active' : ''}">
@@ -592,18 +604,24 @@
             players[target].cmd[source] = val;
 
             if (val === 21) {
-                play('muerte');
+                play('commander_kill');
                 showModal(players[target].name + " ha perdido por comandante de " + players[source].name);
             } else {
-                play('cmd');
+                play('commander_hit');
             }
 
             updateUI();
         }
 
         function changeExtra(i, type, v) {
-            if (v > 0) play(type === 'cmd' ? 'cmd' : 'poison');
+            const sounds = {
+                commanderDeaths: 'cmd',
+                poison: 'poison'
+            };
+
+            if (v > 0) play(sounds[type] || 'click');
             else play('click');
+
             players[i][type] = Math.max(0, players[i][type] + v);
             updateUI();
         }
@@ -668,9 +686,10 @@
         }
         function setMonarca(i) { players.forEach((p, idx) => p.monarca = (idx === i && !p.monarca)); play('curar'); updateUI(); }
         function addPlayer() {
-            if (players.length < 4) {
+            if (players.length < 6) {
+                const newIndex = players.length;
                 players.push({
-                    name: "JUGADOR " + (players.length + 1),
+                    name: defaultNames[newIndex] || ("JUGADOR " + (newIndex + 1)),
                     life: 40,
                     cmd: {},
                     commanderDeaths: 0,
@@ -683,7 +702,7 @@
         }
 
         function removePlayer() {
-            if (players.length > 1) {
+            if (players.length > 2) {
                 players.pop();
                 initCommanderDamage();
                 updateUI();
@@ -695,6 +714,7 @@
             showModal("¿Reiniciar partida, Simón? ¿O te has tomado demasiadas rubias?", true, () => {
                 play('reset');
                 players.forEach(p => { p.life = 40; p.cmd = {}; p.poison = 0; p.monarca = false; p.commanderDeaths = 0; });
+                initCommanderDamage();
                 mana = { w: 0, u: 0, b: 0, r: 0, g: 0, c: 0 };
                 storm = 0; isDay = true;
                 document.getElementById('day-night-toggle').innerText = "☀️";
@@ -703,8 +723,6 @@
                 const starter = Math.floor(Math.random() * players.length);
                 setTimeout(() => { showModal("¡Reiniciado! Empieza: " + players[starter].name); updateUI(); }, 300);
             });
-
-            initCommanderDamage();
         }
 
         updateUI();
