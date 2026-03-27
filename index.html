@@ -2,737 +2,1380 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="manifest" href="manifest.json">
-    <title>MTG Simón Commander Pro</title>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <style>
-        body {
-            background-color: #0d0d0d;
-            background-image: url('fondo.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0;
-            padding: 15px 10px;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <title>Commander Tracker Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Uncial+Antiqua&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <style>
+    body {
+      font-family: Arial;
+      background: radial-gradient(circle at top, #1a1a2e, #0f0f0f);
+      color: #eee;
+      padding: 20px;
+      max-width: 1100px;
+      margin: auto;
+    }
 
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: -1;
-        }
+    h1 {
+      text-align: center;
+      margin-bottom: 25px
+    }
 
-        .main-container {
-            width: 100%;
-            max-width: 450px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+    .logoContainer {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      animation: floatLogo 3s ease-in-out infinite;
+    }
 
-        .players-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
-            width: 100%;
-        }
+    h2 {
+      font-family: 'Uncial Antiqua', serif;
+      letter-spacing: 1px;
+    }
 
-        .player-card {
-            background: rgba(0, 0, 0, 0.85);
-            padding: 12px 5px;
-            border-radius: 15px;
-            text-align: center;
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            min-width: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+    body {
+      font-family: 'Cinzel', serif;
 
-        .overlay {
-            pointer-events: none;
-        }
+    }
 
-        .life-value {
-            font-size: 42px;
-            font-weight: bold;
-            color: #d4af37;
-            margin: 5px 0;
-            display: block;
-        }
+    .bottomGrid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
 
-        .life-controls {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 3px;
-            margin-bottom: 10px;
-            padding: 0 4px;
-        }
+    .podiumCard .name {
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      letter-spacing: 1px;
+    }
 
-        .btn-life {
-            width: 100%;
-            height: 30px;
-            border-radius: 6px;
-            border: none;
-            font-weight: bold;
-            font-size: 10px;
-            cursor: pointer;
-            background: #333;
-            color: white;
-        }
+    .inputsRow {
+      justify-content: center;
+      margin: 18px 0;
+      padding: 10px 0;
+    }
 
-        .player-name {
-            font-size: 10px;
-            text-transform: uppercase;
-            color: #ccc;
-            border: none;
-            background: transparent;
-            text-align: center;
-            width: 100%;
-            margin-bottom: 5px;
-        }
+    .logoContainer img {
+      width: 420px;
+      max-width: 100%;
+      height: auto;
+      filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.8));
+      animation: floatLogo 3s ease-in-out infinite;
+    }
 
-        .extra-counters {
-            display: flex;
-            justify-content: space-around;
-            padding-top: 8px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            width: 100%;
-        }
+    @keyframes floatLogo {
 
-        .counter-box {
-            font-size: 13px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-        }
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
 
-        /* AJUSTE DE CONTROLES SUPERIORES (DADO, JUGADORES, DÍA/NOCHE) */
-        .player-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-            padding: 5px 10px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 12px;
-        }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
 
-        .btn-trans {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            border-radius: 5px;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            font-size: 18px;
-        }
+    .commanderGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
 
-        .mana-section {
-            background: rgba(0, 0, 0, 0.85);
-            padding: 10px;
-            border-radius: 20px;
-            width: 100%;
-            box-sizing: border-box;
-        }
+    .commanderCard {
+      background: #1b1b2a;
+      border-radius: 12px;
+      padding: 0px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      transition: transform 0.2s;
+      overflow: hidden;
+    }
 
-        .mana-pool {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-        }
+    .commanderCard:hover {
+      transform: scale(1.05);
+    }
 
-        .mana-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
+    .commanderCard img {
+      width: 100%;
+      display: block;
+      border-radius: 8px;
+    }
 
-        .mana-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 1px solid #fff;
-            cursor: pointer;
-        }
+    .commanderTop {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 14px;
+    }
 
-        .mana-val {
-            font-weight: bold;
-            font-size: 12px;
-        }
+    .commanderTop .commanderCard {
+      padding: 12px 10px 20px;
+      max-width: 100%;
 
-        .w {
-            background: #f9faf4;
-        }
+      .commanderTop .commanderCard:nth-child(1) {
+        border: 2px solid gold;
+        box-shadow:
+          0 0 8px rgba(255, 215, 0, 0.6),
+          0 0 20px rgba(255, 215, 0, 0.3),
+          0 0 40px rgba(255, 215, 0, 0.15);
+      }
 
-        .u {
-            background: #0e68ab;
-        }
+      .commanderTop .commanderCard:nth-child(2) {
+        border: 2px solid silver;
+        box-shadow:
+          0 0 6px rgba(192, 192, 192, 0.6),
+          0 0 15px rgba(192, 192, 192, 0.3),
+          0 0 30px rgba(192, 192, 192, 0.15);
+      }
 
-        .b {
-            background: #151110;
-        }
+      .commanderTop .commanderCard:nth-child(3) {
+        border: 2px solid #cd7f32;
+        box-shadow:
+          0 0 6px rgba(205, 127, 50, 0.6),
+          0 0 15px rgba(205, 127, 50, 0.3),
+          0 0 30px rgba(205, 127, 50, 0.15);
+      }
+    }
 
-        .r {
-            background: #d32f2f;
-        }
+    @keyframes glowPulseGold {
 
-        .g {
-            background: #228b22;
-        }
+      0%,
+      100% {
+        box-shadow:
+          0 0 8px rgba(255, 215, 0, 0.6),
+          0 0 20px rgba(255, 215, 0, 0.3),
+          0 0 40px rgba(255, 215, 0, 0.15);
+      }
 
-        .c {
-            background: #7f8c8d;
-        }
+      50% {
+        box-shadow:
+          0 0 12px rgba(255, 215, 0, 0.9),
+          0 0 30px rgba(255, 215, 0, 0.5),
+          0 0 60px rgba(255, 215, 0, 0.25);
+      }
+    }
 
-        /* Color Incoloro */
-        .storm {
-            background: #8e44ad;
-            border: none;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
+    .commanderTop .commanderCard:nth-child(1) {
+      animation: glowPulseGold 3s ease-in-out infinite;
+    }
 
-        .side-icon {
-            font-size: 22px;
-            cursor: pointer;
-            text-align: center;
-        }
+    .commanderTop .commanderCard img {
+      width: 85%;
+      margin: 18px auto 0;
+      display: block;
+      border-radius: 8px;
+    }
 
-        .sound-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            width: 100%;
-        }
+    .commanderTop .commanderCard:nth-child(1) {
+      background: linear-gradient(to bottom,
+          rgba(255, 215, 0, 0.35) 0%,
+          rgba(255, 215, 0, 0.15) 30%,
+          rgba(20, 20, 35, 0.95) 100%);
+    }
 
-        .btn-magic {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px 2px;
-            font-size: 10px;
-            border-radius: 10px;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-            text-shadow: 1px 1px 2px black;
-            gap: 4px;
-        }
+    .commanderTop .commanderCard:nth-child(2) {
+      background: linear-gradient(to bottom,
+          rgba(220, 220, 220, 0.35) 0%,
+          rgba(220, 220, 220, 0.15) 30%,
+          rgba(20, 20, 35, 0.95) 100%);
+    }
 
-        .c1 {
-            background: #2d5a27;
-        }
+    .commanderTop .commanderCard:nth-child(3) {
+      background: linear-gradient(to bottom,
+          rgba(205, 127, 50, 0.4) 0%,
+          rgba(205, 127, 50, 0.2) 30%,
+          rgba(20, 20, 35, 0.95) 100%);
+    }
 
-        .c2 {
-            background: #a03023;
-        }
+    .commanderTop .commanderCard:nth-child(2) {
+      border: 2px solid silver;
+    }
 
-        .c3 {
-            background: #20547c;
-        }
+    .commanderTop .commanderCard:nth-child(3) {
+      border: 2px solid #cd7f32;
+    }
 
-        .c4 {
-            background: #3d3d3d;
-        }
+    .commanderTop .commanderCard:nth-child(1) div {
+      color: gold;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+    }
 
-        .c5 {
-            background: #b7950b;
-        }
+    .commanderTop .commanderCard:nth-child(2) div {
+      color: #dcdcdc;
+      font-weight: 600;
+    }
 
-        .c6 {
-            background: #117a65;
-        }
+    .commanderTop .commanderCard:nth-child(3) div {
+      color: #cd7f32;
+      font-weight: 500;
+    }
 
-        .c7 {
-            background: #6c3483;
-        }
+    .commanderTop .commanderCard div {
+      margin-top: 10px;
+      line-height: 1.15;
+      font-family: 'Cinzel', serif;
+    }
 
-        .c8 {
-            background: #a04000;
-        }
+    .commanderTop .commanderCard div:first-of-type {
+      margin-top: 14px;
+      /* nombre separado de la carta */
+    }
 
-        .c9 {
-            background: #2874a6;
-        }
+    .avatarContainer {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-left: -15px;
+      margin-right: -15px;
+      width: 100%;
+      border-radius: 12px 12px 0 0;
+      margin: 0;
+      position: relative;
+    }
 
-        .c10 {
-            background: #1e8449;
-        }
+    .playerAvatar {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      object-position: center 0%;
+      transform: scale(1.2);
+    }
 
-        .c11 {
-            background: #922b21;
-        }
+    .cardImage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, 25%) scale(0.90);
+      /* 🔥 centrado real */
 
-        .c12 {
-            background: #d4ac0d;
-            color: black;
-            text-shadow: none;
-        }
+      width: 120px;
+      z-index: 2;
+      filter: drop-shadow(0 0 15px rgba(0, 0, 0, 1));
+      transition: transform 0.2s;
+      animation: floatCard 3s ease-in-out infinite;
+    }
 
-        .c13 {
-            background: #1a5276;
-        }
+    .cardImage:hover {
+      transform: translate(-50%, 40%) scale(1.2) rotate(2deg);
+    }
 
-        .c14 {
-            background: #7b241c;
-        }
+    .playerNameBar {
+      margin-top: 10px;
+      background: #111827;
+      padding: 8px 10px;
+      font-weight: bold;
+      font-size: 24px;
+      /* 🔥 más grande */
+      text-align: center;
+      width: 100%;
+      margin: 0;
+      border-radius: 0;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      position: relative;
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
 
-        .c15 {
-            background: #1d8348;
-        }
+    .card {
+      background: rgba(28, 28, 43, 0.65);
+      /* 🔥 transparencia */
+      backdrop-filter: blur(8px);
+      /* 🔥 efecto cristal */
+      -webkit-backdrop-filter: blur(8px);
+      /* soporte móvil */
 
-        .reset-btn {
-            background: #d4af37;
-            color: black;
-            font-weight: bold;
-            padding: 15px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-        }
+      padding: 20px;
+      border-radius: 16px;
+      margin-bottom: 20px;
 
-        .commander-section {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 8px;
-            gap: 6px;
-        }
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      /* brillo sutil */
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    }
 
-        .cmd-player {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 9px;
-        }
+    .playerCard select {
+      width: 100%;
+      text-align: center;
+      margin: 0 auto;
+      display: block;
+    }
 
-        .cmd-name {
-            margin-bottom: 3px;
-            opacity: 0.8;
-        }
+    .playerCard {
+      position: relative;
+      overflow: visible;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-        .cmd-btn {
-            background: #222;
-            border: 1px solid #d4af37;
-            border-radius: 6px;
-            padding: 4px 6px;
-            min-width: 24px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: bold;
-        }
+    body {
+      font-family: Arial;
+      background: url("wallpaper.png") no-repeat center center fixed;
+      background-size: cover;
+      color: #eee;
+      padding: 20px;
+      max-width: 1100px;
+      margin: auto;
+    }
 
-        .peligro {
-            animation: parpadeo 1.5s infinite;
-            border-color: #ff4444 !important;
-        }
+    input,
+    select,
+    button {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 8px;
+      border: none;
+    }
 
-        @keyframes parpadeo {
-            0% {
-                background: rgba(0, 0, 0, 0.85);
-            }
+    .selectedDelete {
+      outline: 3px solid red;
+      transform: scale(1.05);
+      opacity: 0.7;
+    }
 
-            50% {
-                background: rgba(100, 0, 0, 0.7);
-            }
+    button {
+      background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
-            100% {
-                background: rgba(0, 0, 0, 0.85);
-            }
-        }
+    button:hover {
+      transform: scale(1.05)
+    }
 
-        .monarca-active {
-            border: 2px solid #d4af37;
-            box-shadow: 0 0 15px #d4af37;
-        }
+    #playersList {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
 
-        #custom-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(15, 15, 15, 0.95);
-            border: 2px solid #d4af37;
-            border-radius: 15px;
-            padding: 25px;
-            z-index: 1000;
-            text-align: center;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(212, 175, 55, 0.3);
-            min-width: 250px;
-        }
+    .playerCard {
+      padding: 0;
+      overflow: hidden;
+    }
 
-        #modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 999;
-        }
+    .playerNameBar input {
+      background: transparent;
+      border: none;
+      color: white;
+      text-align: center;
+      width: 100%;
+      outline: none;
 
-        .modal-btn {
-            background: #d4af37;
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            margin: 10px 5px 0;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+      font-family: 'Cinzel', serif;
+      /* 🔥 igual que ranking */
+      font-weight: 700;
+      font-size: 30px;
+      /* 🔥 más presencia */
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
 
-        .modal-btn.cancel {
-            background: #555;
-            color: white;
-        }
-    </style>
+    .playerCard {
+      background: #2a2a3d;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      position: relative;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .playerCard>img {
+      width: 100px;
+      border-radius: 10px;
+    }
+
+    .playerCardContent {
+      padding: 0px;
+    }
+
+    .playerName {
+      font-size: 18px;
+      font-weight: bold
+    }
+
+    .podium {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .podiumCard {
+      background: #2a2a3d;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .podiumCard:nth-child(1) {
+      border: 2px solid gold;
+    }
+
+    .podiumCard:nth-child(2) {
+      border: 2px solid silver;
+    }
+
+    .podiumCard:nth-child(3) {
+      border: 2px solid #cd7f32;
+    }
+
+    .medal {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .name {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .score {
+      font-size: 14px;
+    }
+
+    .wr {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    .winner input {
+      transform: scale(1.5)
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .row input {
+      width: 140px;
+    }
+
+    .row button {
+      height: 40px;
+      width: 40px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .small {
+      font-size: 12px;
+      opacity: .7
+    }
+
+    #suggestions {
+      background: #222;
+      border-radius: 8px;
+      margin-top: 5px;
+      max-height: 150px;
+      overflow: auto;
+    }
+
+    #suggestions div:hover {
+      background: #444
+    }
+
+    .topBar {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .topItem {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .topItem input {
+      flex: 1;
+    }
+
+    #suggestions {
+      position: absolute;
+      top: 100%;
+      /* justo debajo del input */
+      left: 0;
+      width: 100%;
+      background: #222;
+      border-radius: 8px;
+      max-height: 150px;
+      overflow: auto;
+      z-index: 999;
+      /* para que quede por encima */
+    }
+
+    #statsOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    #statsPopup {
+      position: relative;
+      background: none;
+      /* 🔥 quitamos fondo plano */
+      border: 2px solid #c8a75d;
+      border-radius: 16px;
+      padding: 20px;
+      width: 400px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+    }
+
+    #statsPopup::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+
+      background: linear-gradient(to right,
+          rgba(10, 10, 20, 0.85) 0%,
+          rgba(10, 10, 20, 0.6) 40%,
+          rgba(10, 10, 20, 0.2) 100%);
+
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #statsPopup>* {
+      position: relative;
+      z-index: 2;
+    }
+
+    @keyframes popupFade {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .closeBtn {
+      float: right;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .popupAvatar {
+      position: absolute;
+      top: -30px;
+      right: -20px;
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+
+      border-radius: 50%;
+      border: 3px solid #c8a75d;
+
+      box-shadow:
+        0 0 20px rgba(0, 0, 0, 0.8),
+        0 0 15px rgba(200, 167, 93, 0.4);
+
+      z-index: 10;
+    }
+
+    .winnerBtn {
+      margin-top: 8px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+
+    .winnerBtn:hover {
+      transform: scale(1.1);
+    }
+
+    .winnerBtn.active {
+      background: radial-gradient(circle, gold, #b8860b);
+      color: black;
+      border: 2px solid gold;
+      box-shadow: 0 0 10px gold;
+    }
+
+    #commanderName {
+      height: 40px;
+      padding: 0 10px;
+      box-sizing: border-box;
+    }
+
+    #deleteBtn {
+      height: 40px;
+      width: 40px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(45deg, #ff7675, #d63031);
+    }
+  </style>
 </head>
 
 <body>
-    <div id="modal-overlay"></div>
-    <div id="custom-modal">
-        <p id="modal-text" style="font-size: 18px; color: #d4af37; margin-bottom: 20px;"></p>
-        <div id="modal-buttons"></div>
-    </div>
-    <div class="overlay"></div>
-    <div class="main-container">
-        <div style="text-align:center;">
-            <img src="logo.png" alt="Logo" style="max-width: 200px; width: 100%;">
-        </div>
 
-        <div class="players-container" id="player-area"></div>
+  <div class="logoContainer">
+    <img src="logo.png" alt="Commander Tracker">
+  </div>
 
-        <div class="player-controls">
-            <div class="side-icon" onclick="rollD20()">🎲</div>
-            <div>
-                <button class="btn-trans" onclick="removePlayer()">-</button>
-                <span style="font-size: 12px; margin: 0 10px;">JUGADORES</span>
-                <button class="btn-trans" onclick="addPlayer()">+</button>
-            </div>
-            <div class="side-icon" id="day-night-toggle" onclick="toggleDayNight()">☀️</div>
-        </div>
+  <div class="card">
+    <h2>Hechiceros</h2>
 
-        <div class="mana-section">
-            <div class="mana-pool">
-                <div class="mana-item" onclick="changeMana('w',1)" oncontextmenu="changeMana('w',-1);return false;">
-                    <div class="mana-btn w"></div><span class="mana-val" id="mw">0</span>
-                </div>
-                <div class="mana-item" onclick="changeMana('u',1)" oncontextmenu="changeMana('u',-1);return false;">
-                    <div class="mana-btn u"></div><span class="mana-val" id="mu">0</span>
-                </div>
-                <div class="mana-item" onclick="changeMana('b',1)" oncontextmenu="changeMana('b',-1);return false;">
-                    <div class="mana-btn b"></div><span class="mana-val" id="mb">0</span>
-                </div>
-                <div class="mana-item" onclick="changeMana('r',1)" oncontextmenu="changeMana('r',-1);return false;">
-                    <div class="mana-btn r"></div><span class="mana-val" id="mr">0</span>
-                </div>
-                <div class="mana-item" onclick="changeMana('g',1)" oncontextmenu="changeMana('g',-1);return false;">
-                    <div class="mana-btn g"></div><span class="mana-val" id="mg">0</span>
-                </div>
-                <div class="mana-item" onclick="changeMana('c',1)" oncontextmenu="changeMana('c',-1);return false;">
-                    <div class="mana-btn c"></div><span class="mana-val" id="mc">0</span>
-                </div>
-                <div class="mana-item" onclick="changeStorm(1)" oncontextmenu="changeStorm(-1);return false;">
-                    <div class="mana-btn storm">⛈️</div><span class="mana-val" id="st-val">0</span>
-                </div>
-            </div>
-        </div>
+    <div id="playersList"></div>
 
-        <div class="sound-grid">
-            <button class="btn-magic c1" onclick="play('rugido')"><span>🦖</span> Criatura</button>
-            <button class="btn-magic c2" onclick="play('fuego')"><span>🔥</span> Fuego</button>
-            <button class="btn-magic c3" onclick="play('counter')"><span>⛔</span> Counter</button>
-            <button class="btn-magic c4" onclick="play('muerte')"><span>💀</span> Morir</button>
-            <button class="btn-magic c5" onclick="play('barremesas')"><span>✨</span> Barrer</button>
-            <button class="btn-magic c6" onclick="play('proliferar')"><span>🧪</span> Proliferar</button>
-            <button class="btn-magic c7" onclick="play('cementerio')"><span>⚰️</span> Cementerio</button>
-            <button class="btn-magic c8" onclick="play('mano')"><span>🃏</span> Devolver</button>
-            <button class="btn-magic c9" onclick="play('buscar')"><span>🔍</span> Buscar</button>
-            <button class="btn-magic c10" onclick="play('lobos')"><span>🐺</span> Lobos</button>
-            <button class="btn-magic c11" onclick="play('turno')"><span>⏳</span> Turno</button>
-            <button class="btn-magic c12" onclick="play('curar')"><span>💖</span> Curar</button>
-            <button class="btn-magic c13" onclick="play('zombies')"><span>🧟</span> Zombies</button>
-            <button class="btn-magic c14" onclick="play('cry')"><span>😢</span> Cry</button>
-            <button class="btn-magic c15" onclick="play('barajar')"><span>🔄</span> Barajar</button>
-        </div>
-
-        <button class="reset-btn" onclick="resetGame()">REINICIAR PARTIDA</button>
+    <div style="width:100%; text-align:center; margin:15px 0;">
+      <button onclick="saveGame()" style="background:linear-gradient(45deg,#962300,#ef5555);">
+        Guardar partida
+      </button>
     </div>
 
-    <script>
-        const defaultNames = ["TATO", "CARLOS", "SIMÓN", "FRANCIS", "JESÚS", "SANTI"];
+    <div class="card">
+      <h2>Ranking jugadores</h2>
+      <div id="stats"></div>
+    </div>
 
-        let players = [
-            { name: "TATO", life: 40, cmd: {}, commanderDeaths: 0, poison: 0, monarca: false },
-            { name: "CARLOS", life: 40, cmd: {}, commanderDeaths: 0, poison: 0, monarca: false },
-            { name: "SIMÓN", life: 40, cmd: {}, commanderDeaths: 0, poison: 0, monarca: false }
-        ];
+    <div class="card">
+      <h2>Ranking comandantes</h2>
 
-        initCommanderDamage();
+      <div id="commanderStats"></div>
 
-        let mana = { w: 0, u: 0, b: 0, r: 0, g: 0, c: 0 };
-        let storm = 0;
-        let isDay = true;
+      <div class="row inputsRow" style="justify-content:center; gap:10px;">
 
-        function updateUI() {
-            const area = document.getElementById('player-area');
-
-            if (players.length === 1) {
-                area.style.gridTemplateColumns = "1fr";
-            } else if (players.length === 2) {
-                area.style.gridTemplateColumns = "repeat(2, 1fr)";
-            } else if (players.length === 3) {
-                area.style.gridTemplateColumns = "repeat(3, 1fr)";
-            } else {
-                area.style.gridTemplateColumns = "repeat(2, 1fr)";
-            }
-
-            area.innerHTML = players.map((p, i) => `
-        <div class="player-card ${p.life <= 10 ? 'peligro' : ''} ${p.monarca ? 'monarca-active' : ''}">
-            
-            <input class="player-name" value="${p.name}" onchange="updateName(${i}, this.value)">
-            
-            <span class="life-value">${p.life}</span>
-
-            <div class="life-controls">
-                <button class="btn-life" onclick="changeLife(${i},-5)">-5</button>
-                <button class="btn-life" onclick="changeLife(${i},-1)">-1</button>
-                <button class="btn-life" onclick="changeLife(${i},1)">+1</button>
-                <button class="btn-life" onclick="changeLife(${i},5)">+5</button>
-            </div>
-
-            <div class="extra-counters">
-                <div class="counter-box" 
-                    onclick="changeExtra(${i},'commanderDeaths',1)" 
-                    oncontextmenu="changeExtra(${i},'commanderDeaths',-1);return false;">
-                    <span>🎖️</span>${p.commanderDeaths}
-                </div>
-
-                <div class="counter-box" 
-                    onclick="changeExtra(${i},'poison',1)" 
-                    oncontextmenu="changeExtra(${i},'poison',-1);return false;">
-                    <span>☣️</span>${p.poison}
-                </div>
-
-                <div class="counter-box" onclick="setMonarca(${i})">
-                    <span>👑</span>
-                </div>
-            </div>
-
-            <div class="commander-section">
-                ${Object.keys(p.cmd).map(j => `
-                    <div class="cmd-player">
-                        <div class="cmd-name">${players[j].name}</div>
-                        <div class="cmd-btn" onclick="cycleCommander(${i},${j})">
-                            ${p.cmd[j] >= 21 ? '💀' : p.cmd[j]}
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-
+        <div style="position:relative;">
+          <input id="commanderName" placeholder="Comandante" onkeyup="searchCommander()">
+          <div id="suggestions"></div>
         </div>
-    `).join('');
+
+        <button onclick="addCommander()">+</button>
+
+        <button onclick="toggleDeleteMode()" id="deleteBtn">
+          🗑
+        </button>
+
+      </div>
+
+      <div class="bottomGrid">
+
+        <div class="card">
+          <h2>Historial</h2>
+          <div id="history"></div>
+        </div>
+
+        <div class="card">
+          <h2>Datos</h2>
+          <button onclick="exportData()">Exportar</button>
+
+          <button onclick="triggerImport()">Importar</button>
+
+          <input type="file" id="importFile" onchange="importData(event)" style="display:none;">
+        </div>
+
+      </div>
+
+      <script>
+        let players = JSON.parse(localStorage.getItem("players")) || [];
+        if (players.length === 0) {
+          players = [
+            { id: Date.now() + 1, name: "Simón", wins: 0, losses: 0 },
+            { id: Date.now() + 2, name: "Tato", wins: 0, losses: 0 },
+            { id: Date.now() + 3, name: "Carlos", wins: 0, losses: 0 }
+          ];
+          localStorage.setItem("players", JSON.stringify(players));
         }
+        let commanders = JSON.parse(localStorage.getItem("commanders")) || [];
+        let games = JSON.parse(localStorage.getItem("games")) || [];
+        let deleteMode = false;
+        let selectedCommanders = new Set();
 
-        function changeCommander(target, source, value) {
-            players[target].cmd[source] = Math.max(0, players[target].cmd[source] + value);
-            play(value > 0 ? 'cmd' : 'click');
+        function toggleDeleteMode() {
 
-            // 💀 muerte automática a 21
-            if (players[target].cmd[source] >= 21) {
-                showModal(players[target].name + " ha perdido por daño de comandante de " + players[source].name);
+          // 🧨 Si ya estamos en modo borrar → intentar borrar
+          if (deleteMode) {
+
+            if (selectedCommanders.size === 0) {
+              alert("Selecciona al menos un comandante");
+              return;
             }
 
-            updateUI();
+            if (!confirm("¿Borrar comandantes seleccionados?")) return;
+
+            commanders = commanders.filter(c => !selectedCommanders.has(c.id));
+
+            save();
+            deleteMode = false;
+            selectedCommanders.clear();
+
+            document.getElementById("deleteBtn").textContent = "🗑 Borrar comandantes";
+
+            render();
+            return;
+          }
+
+          // 🔥 Activar modo borrar
+          deleteMode = true;
+          selectedCommanders.clear();
+
+          document.getElementById("deleteBtn").textContent = "✅ Confirmar borrado";
+
+          render();
         }
 
-        function updateName(i, val) { players[i].name = val.toUpperCase(); }
-        function changeLife(i, v) {
-            players[i].life += v;
-            if (v === 5) play('plus10');
-            else if (v === -5) play('minus10');
-            else if (v > 0) play('plus1');
-            else play('minus1');
-            updateUI();
+        function selectWinner(el, playerId) {
+          document.querySelectorAll(".winnerBtn").forEach(b => b.classList.remove("active"));
+          el.classList.add("active");
         }
 
-        function initCommanderDamage() {
-            players.forEach((p, i) => {
-                p.cmd = {};
-                players.forEach((_, j) => {
-                    if (i !== j) {
-                        p.cmd[j] = 0;
-                    }
-                });
+        function clearHistory() {
+          if (!confirm("¿Borrar TODO el historial?")) return;
+
+          players.forEach(p => {
+            p.wins = 0;
+            p.losses = 0;
+          });
+
+          commanders.forEach(c => {
+            c.wins = 0;
+            c.losses = 0;
+          });
+
+          games = [];
+
+          save();
+          render();
+        }
+
+        function getPlayerImage(name) {
+          const images = {
+            "Tato": { src: "tato1.png", pos: "center 10%" },
+            "Carlos": { src: "carlos1.png", pos: "center 15%" },
+            "Simón": { src: "simon1.png", pos: "center 20%" }
+          };
+
+          return images[name] || { src: "", pos: "center" };
+        }
+
+        function recalcStats() {
+          // reset
+          players.forEach(p => {
+            p.wins = 0;
+            p.losses = 0;
+          });
+
+          commanders.forEach(c => {
+            c.wins = 0;
+            c.losses = 0;
+          });
+
+          // recalcular desde historial
+          games.forEach(g => {
+            g.players.forEach(p => {
+              let player = players.find(x => x.name === p.player);
+              let cmd = commanders.find(c => c.name === p.commander);
+
+              if (player) {
+                if (p.result) player.wins++;
+                else player.losses++;
+              }
+
+              if (cmd) {
+                if (p.result) cmd.wins++;
+                else cmd.losses++;
+              }
             });
+          });
         }
 
-        function cycleCommander(target, source) {
-            let val = players[target].cmd[source] || 0;
+        function getDeckStats(playerName, commanderName) {
+          const filtered = games.filter(g =>
+            g.players.some(p => p.player === playerName && p.commander === commanderName)
+          );
 
-            val++;
+          const wins = filtered.filter(g =>
+            g.players.some(p => p.player === playerName && p.commander === commanderName && p.result)
+          );
 
-            if (val > 21) val = 0;
-
-            players[target].cmd[source] = val;
-
-            if (val === 21) {
-                play('commander_kill');
-                showModal(players[target].name + " ha perdido por comandante de " + players[source].name);
-            } else {
-                play('commander_hit');
-            }
-
-            updateUI();
+          return {
+            games: filtered.length,
+            wins: wins.length,
+            wr: filtered.length ? ((wins.length / filtered.length) * 100).toFixed(1) : 0
+          };
         }
 
-        function changeExtra(i, type, v) {
-            const sounds = {
-                commanderDeaths: 'cmd',
-                poison: 'poison'
+        function getMatchupStats(playerName, commanderName, vsList) {
+          const filtered = games.filter(g => {
+            const me = g.players.find(p => p.player === playerName && p.commander === commanderName);
+            if (!me) return false;
+
+            const enemies = g.players
+              .filter(p => p.player !== playerName)
+              .map(p => p.commander);
+
+            return vsList.every(v => !v || enemies.includes(v));
+          });
+
+          const wins = filtered.filter(g =>
+            g.players.some(p => p.player === playerName && p.commander === commanderName && p.result)
+          );
+
+          return {
+            games: filtered.length,
+            wins: wins.length,
+            losses: filtered.length - wins.length,
+            wr: filtered.length ? ((wins.length / filtered.length) * 100).toFixed(1) : 0
+          };
+        }
+
+        function triggerImport() {
+          document.getElementById("importFile").click();
+        }
+
+        function getMatchupStats(playerName, commanderName, vsList) {
+          const filtered = games.filter(g => {
+            const me = g.players.find(p => p.player === playerName && p.commander === commanderName);
+            if (!me) return false;
+
+            const enemies = g.players
+              .filter(p => p.player !== playerName)
+              .map(p => p.commander);
+
+            return vsList.every(v => !v || enemies.includes(v));
+          });
+
+          const wins = filtered.filter(g =>
+            g.players.some(p => p.player === playerName && p.commander === commanderName && p.result)
+          );
+
+          return {
+            games: filtered.length,
+            wins: wins.length,
+            losses: filtered.length - wins.length,
+            wr: filtered.length ? ((wins.length / filtered.length) * 100).toFixed(1) : 0
+          };
+        }
+
+        function getBestWorstMatchups(playerName, deck) {
+          let results = {};
+
+          games.forEach(g => {
+            const me = g.players.find(p => p.player === playerName && p.commander === deck);
+            if (!me) return;
+
+            g.players
+              .filter(p => p.player !== playerName)
+              .forEach(enemy => {
+                if (!results[enemy.commander]) {
+                  results[enemy.commander] = { wins: 0, games: 0 };
+                }
+
+                results[enemy.commander].games++;
+                if (me.result) results[enemy.commander].wins++;
+              });
+          });
+
+          let arr = Object.entries(results).map(([cmd, data]) => {
+            return {
+              commander: cmd,
+              wr: data.games ? (data.wins / data.games) * 100 : 0,
+              games: data.games
             };
+          });
 
-            if (v > 0) play(sounds[type] || 'click');
-            else play('click');
+          arr.sort((a, b) => b.wr - a.wr);
 
-            players[i][type] = Math.max(0, players[i][type] + v);
-            updateUI();
+          return {
+            best: arr[0],
+            worst: arr[arr.length - 1]
+          };
         }
 
-        function toggleDayNight() {
-            isDay = !isDay;
-            document.getElementById('day-night-toggle').innerText = isDay ? "☀️" : "🌕";
-            play(isDay ? 'day' : 'night');
+        function save() {
+          localStorage.setItem("players", JSON.stringify(players));
+          localStorage.setItem("commanders", JSON.stringify(commanders));
+          localStorage.setItem("games", JSON.stringify(games));
         }
 
-        function changeMana(color, v) {
-            mana[color] = Math.max(0, mana[color] + v);
-            document.getElementById('m' + color).innerText = mana[color];
-            if (v > 0) {
-                const sounds = {
-                    'w': 'mana_white', 'u': 'mana_blue', 'b': 'mana_black',
-                    'r': 'mana_red', 'g': 'mana_green', 'c': 'mana_colorless'
-                };
-                play(sounds[color]);
-            } else play('click');
-        }
-
-        function showModal(text, confirmMode = false, onConfirm = null) {
-            const modal = document.getElementById('custom-modal');
-            const overlay = document.getElementById('modal-overlay');
-            const textEl = document.getElementById('modal-text');
-            const buttonsEl = document.getElementById('modal-buttons');
-
-            textEl.innerText = text;
-            buttonsEl.innerHTML = '';
-
-            if (confirmMode) {
-                const btnOk = document.createElement('button');
-                btnOk.className = 'modal-btn';
-                btnOk.innerText = 'SÍ, SEGURO';
-                btnOk.onclick = () => { overlay.style.display = modal.style.display = 'none'; onConfirm(); };
-
-                const btnCancel = document.createElement('button');
-                btnCancel.className = 'modal-btn cancel';
-                btnCancel.innerText = 'NO';
-                btnCancel.onclick = () => { overlay.style.display = modal.style.display = 'none'; };
-
-                buttonsEl.appendChild(btnCancel);
-                buttonsEl.appendChild(btnOk);
-            } else {
-                const btnClose = document.createElement('button');
-                btnClose.className = 'modal-btn';
-                btnClose.innerText = 'ACEPTAR';
-                btnClose.onclick = () => { overlay.style.display = modal.style.display = 'none'; };
-                buttonsEl.appendChild(btnClose);
-            }
-
-            overlay.style.display = 'block';
-            modal.style.display = 'block';
-        }
-
-        function changeStorm(v) { storm = Math.max(0, storm + v); document.getElementById('st-val').innerText = storm; play('click'); }
-        function rollD20() {
-            play('d20');
-            const res = Math.floor(Math.random() * 20) + 1;
-            setTimeout(() => { showModal("🎲 El destino dice: " + res); }, 100);
-        }
-        function setMonarca(i) { players.forEach((p, idx) => p.monarca = (idx === i && !p.monarca)); play('curar'); updateUI(); }
         function addPlayer() {
-            if (players.length < 6) {
-                const newIndex = players.length;
-                players.push({
-                    name: defaultNames[newIndex] || ("JUGADOR " + (newIndex + 1)),
-                    life: 40,
-                    cmd: {},
-                    commanderDeaths: 0,
-                    poison: 0,
-                    monarca: false
-                });
-                initCommanderDamage();
-                updateUI();
-            }
+          let name = playerName.value;
+          if (!name) return;
+          players.push({ id: Date.now(), name, wins: 0, losses: 0 });
+          save(); render();
         }
 
-        function removePlayer() {
-            if (players.length > 2) {
-                players.pop();
-                initCommanderDamage();
-                updateUI();
-            }
-        }
-        function play(s) { new Audio(s + '.mp3').play().catch(() => { }); }
+        function addCommander() {
+          let name = commanderName.value;
+          if (!name) return;
 
-        function resetGame() {
-            showModal("¿Reiniciar partida, Simón? ¿O te has tomado demasiadas rubias?", true, () => {
-                play('reset');
-                players.forEach(p => { p.life = 40; p.cmd = {}; p.poison = 0; p.monarca = false; p.commanderDeaths = 0; });
-                initCommanderDamage();
-                mana = { w: 0, u: 0, b: 0, r: 0, g: 0, c: 0 };
-                storm = 0; isDay = true;
-                document.getElementById('day-night-toggle').innerText = "☀️";
-                Object.keys(mana).forEach(c => document.getElementById('m' + c).innerText = '0');
-                document.getElementById('st-val').innerText = '0';
-                const starter = Math.floor(Math.random() * players.length);
-                setTimeout(() => { showModal("¡Reiniciado! Empieza: " + players[starter].name); updateUI(); }, 300);
+          fetch(`https://api.scryfall.com/cards/named?fuzzy=${encodeURIComponent(name)}`)
+            .then(r => r.json())
+            .then(d => {
+              let image = "";
+              if (d.image_uris) { image = d.image_uris.normal; }
+              else if (d.card_faces && d.card_faces[0].image_uris) { image = d.card_faces[0].image_uris.normal; }
+
+              commanders.push({ id: Date.now(), name: d.name, image, wins: 0, losses: 0 });
+              save(); render();
+            })
+            .catch(() => alert("No encontrado"));
+        }
+
+        function updatePlayerName(i, name) {
+          players[i].name = name;
+        }
+
+        function render() {
+          recalcStats();
+          let container = document.getElementById("playersList");
+          container.innerHTML = "";
+
+          players.slice(0, 3).forEach((p, i) => {
+
+            let data = getPlayerImage(p.name);
+
+            container.innerHTML += `
+  <div class="playerCard">
+
+    <div class="avatarContainer" onclick="openPlayerStats('${p.name}')">
+      <img class="playerAvatar" src="${data.src}" style="object-position:${data.pos}">
+      <img id="card-${i}" class="cardImage" src="">
+    </div>
+
+    <div class="playerNameBar">
+      <input 
+        value="${p.name}" 
+        onchange="updatePlayerName(${i}, this.value)"
+        style="background:none;border:none;color:white;text-align:center;font-weight:bold;width:100%"
+      >
+    </div>
+
+    <select onchange="updateCommander(${i}, this.value)">
+  ${commanders.map(c => `
+    <option value="${c.id}" ${p.commander == c.id ? "selected" : ""}>
+      ${c.name}
+    </option>
+  `).join("")}
+</select>
+
+      <div class="winnerBtn" onclick="selectWinner(this, ${p.id})">
+        🏆
+      </div>
+
+  </div>
+`;
+
+            let cmd = commanders.find(c => c.id == p.commander);
+            if (cmd) {
+              requestAnimationFrame(() => {
+                let img = document.getElementById(`card-${i}`);
+                if (img) img.src = cmd.image;
+              });
+            }
+
+          }); // ← cierra forEach
+
+          renderStats();
+          renderCommanderStats();
+          renderHistory();
+
+        } //  
+
+        function saveGame() {
+          let cards = document.querySelectorAll(".playerCard");
+          let game = { id: Date.now(), date: new Date().toLocaleString(), players: [] };
+
+          cards.forEach(c => {
+            let name = c.querySelector(".playerNameBar input").value;
+            let p = players.find(x => x.name === name);
+            let cmdId = c.querySelector("select").value;
+            let cmd = commanders.find(c => c.id == cmdId);
+            if (!cmd) return;
+            let win = c.querySelector(".winnerBtn")?.classList.contains("active");
+
+            if (win) {
+              p.wins++;
+              if (cmd) cmd.wins++;
+            } else {
+              p.losses++;
+              if (cmd) cmd.losses++;
+            }
+
+            game.players.push({
+              player: p.name,
+              playerId: p.id,
+              commander: cmd.name,
+              commanderId: cmd.id,
+              result: win
             });
+          });
+
+          games.push(game);
+          save(); render();
         }
 
-        updateUI();
-        window.addEventListener('load', () => {
-            if (sessionStorage.getItem('playReset') === 'true') {
-                play('reset');
-                sessionStorage.removeItem('playReset');
+        function renderStats() {
+          let div = document.getElementById("stats");
+          div.innerHTML = "";
+
+          let sorted = [...players].sort((a, b) => b.wins - a.wins).slice(0, 3);
+
+          let container = document.createElement("div");
+          container.className = "podium";
+
+          const medals = ["🥇", "🥈", "🥉"];
+
+          sorted.forEach((p, i) => {
+            let total = p.wins + p.losses;
+            let wr = total ? ((p.wins / total) * 100).toFixed(1) : 0;
+
+            let card = document.createElement("div");
+            card.className = "podiumCard";
+
+            card.innerHTML = `
+      <div class="medal">${medals[i]}</div>
+      <div class="name">${p.name}</div>
+      <div class="score">${p.wins}W / ${p.losses}L</div>
+      <div class="wr">${wr}% WR</div>
+    `;
+
+            container.appendChild(card);
+          });
+
+          div.appendChild(container);
+        }
+
+        function updateCommander(i, commanderId) {
+          players[i].commander = commanderId;
+
+          let cmd = commanders.find(c => c.id == commanderId);
+          let img = document.getElementById(`card-${i}`);
+
+          if (cmd && img) {
+            img.src = cmd.image;
+          }
+        }
+
+        function renderCommanderStats() {
+          let div = document.getElementById("commanderStats");
+          div.innerHTML = "";
+
+          let sorted = [...commanders].sort((a, b) => b.wins - a.wins);
+
+          let top = sorted.slice(0, 3);
+          let rest = sorted.slice(3);
+
+          // 🥇 TOP 3
+          let topContainer = document.createElement("div");
+          topContainer.className = "commanderTop";
+
+          top.forEach(c => {
+            let total = c.wins + c.losses;
+            let wr = total ? ((c.wins / total) * 100).toFixed(1) : 0;
+
+            topContainer.innerHTML += `
+      <div class="commanderCard ${selectedCommanders.has(c.id) ? 'selectedDelete' : ''}" onclick="selectCommander(${c.id})">
+        <img src="${c.image}">
+        <div>${c.name}</div>
+        <div>${c.wins}W / ${c.losses}L</div>
+        <div>${wr}%</div>
+      </div>
+    `;
+          });
+
+          div.appendChild(topContainer);
+
+          // 🃏 RESTO
+          let grid = document.createElement("div");
+          grid.className = "commanderGrid";
+
+          rest.forEach(c => {
+            let total = c.wins + c.losses;
+            let wr = total ? ((c.wins / total) * 100).toFixed(1) : 0;
+
+            grid.innerHTML += `
+      <div class="commanderCard ${selectedCommanders.has(c.id) ? 'selectedDelete' : ''}" onclick="selectCommander(${c.id})">
+        <img src="${c.image}">
+        <div style="font-size:12px">${c.name}</div>
+        <div style="font-size:11px">${wr}%</div>
+      </div>
+    `;
+          });
+
+          div.appendChild(grid);
+        }
+
+        function renderHistory() {
+          let div = document.getElementById("history");
+          div.innerHTML = "";
+
+          games.slice().reverse().forEach(g => {
+            div.innerHTML += `
+      <div class="small">
+        ${g.date}
+        <button onclick="deleteGame(${g.id})" style="float:right">🗑</button>
+      </div>
+    `;
+
+            g.players.forEach(p => {
+              div.innerHTML += `<div>${p.player} - ${p.commander} ${p.result ? "🏆" : ""}</div>`;
+            });
+
+            div.innerHTML += "<hr>";
+          });
+        }
+
+        function openPlayerStats(playerName) {
+
+          // eliminar si ya existe
+          const old = document.getElementById("statsOverlay");
+          if (old) old.remove();
+
+          const overlay = document.createElement("div");
+          overlay.id = "statsOverlay";
+
+          const popup = document.createElement("div");
+          popup.id = "statsPopup";
+
+          const imgData = getPlayerImage(playerName);
+          popup.style.backgroundImage = `url(${imgData.src})`;
+          popup.style.backgroundSize = "cover";
+          popup.style.backgroundPosition = "85% 15%";
+          popup.innerHTML = `
+          <div class="closeBtn" onclick="closeStats()">✖</div>
+          <h2>${playerName}</h2>
+        `;
+
+          // 🔹 decks usados
+          const decks = [...new Set(
+            games.flatMap(g =>
+              g.players
+                .filter(p => p.player === playerName)
+                .map(p => p.commander)
+            )
+          )];
+
+          decks.forEach(deck => {
+
+            const stats = getDeckStats(playerName, deck);
+            const mw = getBestWorstMatchups(playerName, deck);
+
+            const block = document.createElement("div");
+            block.style.marginBottom = "16px";
+            block.style.padding = "10px";
+            block.style.borderBottom = "1px solid rgba(255,255,255,0.1)";
+
+            block.innerHTML = `
+            <strong style="font-size:16px">${deck}</strong><br>
+
+            🧾 ${stats.wins}W / ${stats.games}G  
+            📊 ${stats.wr}% WR
+
+            <br><br>
+
+            ⚔️ VS:
+            <select onchange="updateMatchupPopup('${playerName}','${deck}', this, 1)">
+              <option value="">Todos</option>
+              ${commanders.map(c => `<option>${c.name}</option>`).join("")}
+            </select>
+
+            <select onchange="updateMatchupPopup('${playerName}','${deck}', this, 2)">
+              <option value="">Todos</option>
+              ${commanders.map(c => `<option>${c.name}</option>`).join("")}
+            </select>
+
+            <div id="popup-${playerName}-${deck}" style="margin-top:6px;font-size:13px;"></div>
+
+            <div style="font-size:11px; opacity:0.7; margin-top:6px;">
+              🔥 Mejor: ${mw.best ? mw.best.commander + " (" + mw.best.wr.toFixed(1) + "%)" : "-"}<br>
+              💀 Peor: ${mw.worst ? mw.worst.commander + " (" + mw.worst.wr.toFixed(1) + "%)" : "-"}
+            </div>
+          `;
+
+            popup.appendChild(block);
+          });
+
+          overlay.appendChild(popup);
+          document.body.appendChild(overlay);
+
+          // cerrar al hacer click fuera
+          overlay.onclick = (e) => {
+            if (e.target === overlay) closeStats();
+          };
+        }
+
+        function updateMatchupPopup(playerName, deck, selectEl, index) {
+
+          const parent = selectEl.parentElement;
+          const selects = parent.querySelectorAll("select");
+
+          const vsList = [
+            selects[0].value,
+            selects[1].value
+          ];
+
+          const stats = getMatchupStats(playerName, deck, vsList);
+
+          const div = document.getElementById(`popup-${playerName}-${deck}`);
+
+          div.innerHTML = `
+          → ${stats.wins}W / ${stats.losses}L  
+          (${stats.games} partidas · ${stats.wr}%)
+        `;
+        }
+
+        function closeStats() {
+          const overlay = document.getElementById("statsOverlay");
+          if (overlay) overlay.remove();
+        }
+
+        function deleteGame(id) {
+          if (!confirm("¿Eliminar esta partida?")) return;
+
+          let game = games.find(g => g.id === id);
+          if (!game) return;
+
+          game.players.forEach(p => {
+            let player = players.find(x => x.id === p.playerId) || players.find(x => x.name === p.player);
+            let cmd = commanders.find(c => c.id == p.commanderId);
+
+            if (!cmd && p.commander) {
+              cmd = commanders.find(c => c.name === p.commander);
             }
-        });
-    </script>
+
+            if (cmd) {
+              if (p.result) cmd.wins = Math.max(0, cmd.wins - 1);
+              else cmd.losses = Math.max(0, cmd.losses - 1);
+            }
+
+            if (player) {
+              if (p.result) player.wins = Math.max(0, player.wins - 1);
+              else player.losses = Math.max(0, player.losses - 1);
+            }
+
+            if (cmd) {
+              if (p.result) cmd.wins = Math.max(0, cmd.wins - 1);
+              else cmd.losses = Math.max(0, cmd.losses - 1);
+            }
+          });
+
+          games = games.filter(g => g.id !== id);
+
+          save();
+          render();
+        }
+
+        function deleteCommander(id) {
+          if (!confirm("¿Borrar este comandante?")) return;
+          commanders = commanders.filter(c => c.id !== id);
+          save(); render();
+        }
+
+        function exportData() {
+          const data = { players, commanders, games };
+          const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url; a.download = "mtg-tracker.json"; a.click();
+        }
+
+        function importData(event) {
+          const file = event.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = e => {
+            const data = JSON.parse(e.target.result);
+            players = data.players || [];
+            commanders = data.commanders || [];
+            games = data.games || [];
+            save(); render();
+          };
+          reader.readAsText(file);
+        }
+
+        let debounceTimer;
+        function searchCommander() {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(() => {
+            const query = commanderName.value;
+            const box = document.getElementById("suggestions");
+            if (query.length < 2) { box.innerHTML = ""; return; }
+            fetch(`https://api.scryfall.com/cards/autocomplete?q=${encodeURIComponent(query)}`)
+              .then(r => r.json())
+              .then(data => {
+                const box = document.getElementById("suggestions");
+                box.innerHTML = "";
+                data.data.slice(0, 5).forEach(name => {
+                  const div = document.createElement("div");
+                  div.textContent = name;
+                  div.style.cursor = "pointer";
+                  div.style.padding = "6px";
+                  div.onclick = () => { commanderName.value = name; box.innerHTML = ""; };
+                  box.appendChild(div);
+                });
+              });
+          }, 250);
+        }
+
+        function selectCommander(id) {
+          if (!deleteMode) return;
+
+          if (selectedCommanders.has(id)) {
+            selectedCommanders.delete(id);
+          } else {
+            selectedCommanders.add(id);
+          }
+
+          render();
+        }
+
+        render();
+      </script>
+
 </body>
 
 </html>
